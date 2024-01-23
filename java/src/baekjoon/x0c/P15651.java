@@ -1,34 +1,37 @@
-package baekjoon.x0b;
+package baekjoon.x0c;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Scanner;
 
-public class P15650 {
+public class P15651 {
     private static final BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(System.out));
     private static int n, m;
+    private static int[] nums;
 
     public static void main(String[] args) throws IOException {
         Scanner sc = new Scanner(System.in);
         n = sc.nextInt();
         m = sc.nextInt();
-        recursive(new int[n + 1], 1);
+        nums = new int[m];
+
+        func(0);
         bw.close();
     }
 
-    public static void recursive(int[] nums, int depth) throws IOException {
-        if (depth > m) {
-            for (int i = 1; i <= m; i++) {
-                bw.write(nums[i] + " ");
+    private static void func(int depth) throws IOException {
+        if (depth == m) {
+            for (int num : nums) {
+                bw.write(num + " ");
             }
-            bw.write('\n');
+            bw.write("\n");
             return;
         }
 
-        for (int i = nums[depth - 1] + 1; i <= n; i++) {
+        for (int i = 1; i <= n; i++) {
             nums[depth] = i;
-            recursive(nums, depth + 1);
+            func(depth + 1);
         }
     }
 }
