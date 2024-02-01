@@ -1,0 +1,21 @@
+import java.util.Map.Entry;
+
+class Solution {
+    public String mostCommonWord(String paragraph, String[] banned) {
+        Set<String> banWords = new HashSet<>(Arrays.asList(banned));
+
+        paragraph = paragraph.replaceAll("[!?',;. ]+", " ");
+        List<String> words = Arrays.stream(paragraph.split(" "))
+                .map(String::toLowerCase)
+                .collect(Collectors.toList());
+
+        Map<String, Integer> map = new HashMap<>();
+        for (String word : words) {
+            if (!banWords.contains(word)) {
+                map.put(word, map.getOrDefault(word, 0) + 1);
+            }
+        }
+
+        return Collections.max(map.entrySet(), Comparator.comparingInt(Entry::getValue)).getKey();
+    }
+}
