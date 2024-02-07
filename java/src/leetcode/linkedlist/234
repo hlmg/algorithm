@@ -1,0 +1,34 @@
+class Solution {
+    public boolean isPalindrome(ListNode head) {
+        Deque<Integer> deque = new ArrayDeque<>();
+        while (head != null) {
+            deque.offer(head.val);
+            head = head.next;
+        }
+
+        boolean answer = true;
+        while (deque.size() >= 2) {
+            if (!Objects.equals(deque.poll(), deque.pollLast())) {
+                return false;
+            }
+        }
+        return answer;
+    }
+
+    private static class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode() {
+        }
+
+        ListNode(int val) {
+            this.val = val;
+        }
+
+        ListNode(int val, ListNode next) {
+            this.val = val;
+            this.next = next;
+        }
+    }
+}
