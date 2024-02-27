@@ -1,0 +1,28 @@
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Deque;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> combine(int n, int k) {
+        List<List<Integer>> answer = new ArrayList<>();
+        for (int i = 1; i <= n; i++) {
+            Deque<Integer> stack = new ArrayDeque<>();
+            stack.push(i);
+            dfs(i, n, k, stack, answer);
+        }
+        return answer;
+    }
+
+    private void dfs(int i, int n, int k, Deque<Integer> stack, List<List<Integer>> answer) {
+        if (stack.size() == k) {
+            answer.add(new ArrayList<>(stack));
+            return;
+        }
+        for (int j = i + 1; j <= n; j++) {
+            stack.push(j);
+            dfs(j, n, k, stack, answer);
+            stack.pop();
+        }
+    }
+}

@@ -1,0 +1,38 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    String[] buttons = {
+            "",
+            "",
+            "abc",
+            "def",
+            "ghi",
+            "jkl",
+            "mno",
+            "pqrs",
+            "tuv",
+            "wxyz"
+    };
+
+    public List<String> letterCombinations(String digits) {
+        ArrayList<String> answer = new ArrayList<>();
+        if (digits.isEmpty()) {
+            return answer;
+        }
+        dfs(0, digits, new StringBuilder(), answer);
+        return answer;
+    }
+
+    private void dfs(int depth, String digits, StringBuilder stringBuilder, ArrayList<String> answer) {
+        if (depth == digits.length()) {
+            answer.add(stringBuilder.toString());
+            return;
+        }
+        int i = digits.charAt(depth) - '0';
+        String button = buttons[i];
+        for (char c : button.toCharArray()) {
+            dfs(depth + 1, digits, new StringBuilder(stringBuilder).append(c), answer);
+        }
+    }
+}
