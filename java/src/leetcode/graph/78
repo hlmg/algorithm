@@ -1,0 +1,24 @@
+import java.util.ArrayList;
+import java.util.List;
+
+class Solution {
+    public List<List<Integer>> subsets(int[] nums) {
+        List<List<Integer>> answer = new ArrayList<>();
+        for (int i = 0; i <= nums.length; i++) {
+            dfs(0, i, nums, new ArrayList<>(), answer);
+        }
+        return answer;
+    }
+
+    private void dfs(int depth, int size, int[] nums, ArrayList<Integer> candidates, List<List<Integer>> answer) {
+        if (candidates.size() == size) {
+            answer.add(new ArrayList<>(candidates));
+            return;
+        }
+        for (int i = depth; i < nums.length; i++) {
+            candidates.add(nums[i]);
+            dfs(i + 1, size, nums, candidates, answer);
+            candidates.remove(candidates.size() - 1);
+        }
+    }
+}
