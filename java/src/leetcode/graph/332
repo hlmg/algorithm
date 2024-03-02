@@ -1,0 +1,30 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+class Solution {
+    public List<String> findItinerary(List<List<String>> tickets) {
+        Map<String, Queue<String>> map = new HashMap<>();
+
+        for (List<String> ticket : tickets) {
+            String from = ticket.get(0);
+            String to = ticket.get(1);
+            map.putIfAbsent(from, new PriorityQueue<>());
+            map.get(from).offer(to);
+        }
+
+        List<String> answer = new ArrayList<>();
+        dfs(answer, map, "JFK");
+        return answer;
+    }
+
+    private void dfs(List<String> answer, Map<String, Queue<String>> map, String from) {
+        while (map.get(from) != null && !map.get(from).isEmpty()) {
+            dfs(answer, map, map.get(from).poll());
+        }
+        answer.add(from);
+    }
+}
