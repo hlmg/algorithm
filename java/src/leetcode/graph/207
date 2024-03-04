@@ -1,0 +1,44 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+class Solution {
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        for (int[] prerequisite : prerequisites) {
+            map.putIfAbsent(prerequisite[0], new LinkedList<>());
+            map.get(prerequisite[0]).add(prerequisite[1]);
+        }
+        List<Integer> candidates = new ArrayList<>();
+        List<Integer> visited = new ArrayList<>();
+        for (Integer key : map.keySet()) {
+            if (!dfs(map, key, candidates, visited)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean dfs(Map<Integer, List<Integer>> map, Integer from, List<Integer> candidates,
+                        List<Integer> visited) {
+        if (candidates.contains(from)) {
+            return false;
+        }
+        if (visited.contains(from)) {
+            return true;
+        }
+        if (map.containsKey(from)) {
+            candidates.add(from);
+            for (Integer to : map.get(from)) {
+                if (!dfs(map, to, candidates, visited)) {
+                    return false;
+                }
+            }
+            candidates.remove(from);
+            visited.add(from);
+        }
+        return true;
+    }
+}
