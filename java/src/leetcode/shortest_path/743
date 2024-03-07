@@ -1,0 +1,43 @@
+import java.util.AbstractMap.SimpleEntry;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.PriorityQueue;
+import java.util.Queue;
+
+// O(E log V)
+class Solution {
+    public int networkDelayTime(int[][] times, int n, int k) {
+        Map<Integer, Map<Integer, Integer>> graph = new HashMap<>();
+        for (int[] time : times) {
+            graph.putIfAbsent(time[0], new HashMap<>());
+            graph.get(time[0]).put(time[1], time[2]);
+        }
+
+        Queue<Entry<Integer, Integer>> pq = new PriorityQueue<>(Entry.comparingByValue());
+        pq.offer(new SimpleEntry<>(k, 0));
+
+        Map<Integer, Integer> dist = new HashMap<>();
+        while (!pq.isEmpty()) {
+            Entry<Integer, Integer> entry = pq.poll();
+            Integer from = entry.getKey();
+            Integer time = entry.getValue();
+            if (dist.containsKey(from)) {
+                continue;
+            }
+            dist.put(from, time);
+            if (!graph.containsKey(from)) {
+                continue;
+            }
+            for (Entry<Integer, Integer> e : graph.get(from).entrySet()) {
+                pq.offer(new SimpleEntry<>(e.getKey(), time + e.getValue()));
+            }
+        }
+
+        if (dist.size() == n) {
+            return Collections.max(dist.values());
+        }
+        return -1;
+    }
+}
