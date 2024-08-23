@@ -6,80 +6,60 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.PriorityQueue;
-import java.util.Queue;
 import java.util.StringTokenizer;
 
 public class P1753 {
     public static void main(String[] args) {
+        final int INF = 20_000 * 10;
         FastScanner sc = new FastScanner();
         int v = sc.nextInt();
         int e = sc.nextInt();
         int k = sc.nextInt();
-
-        Map<Integer, List<Edge>> edges = new HashMap<>();
-        for (int i = 0; i < e; i++) {
-            int key = sc.nextInt();
-            edges.putIfAbsent(key, new ArrayList<>());
-            edges.get(key).add(new Edge(sc.nextInt(), sc.nextInt()));
+        List<List<Pair>> adj = new ArrayList<>();
+        for (int i = 0; i <= v; i++) {
+            adj.add(new ArrayList<>());
         }
-
-        int[] answer = new int[v + 1];
-        Arrays.fill(answer, -1);
-        Queue<Node> nodes = new PriorityQueue<>(Comparator.comparingInt(n -> n.distance));
-        nodes.add(new Node(k, 0));
-
-        while (!nodes.isEmpty()) {
-            Node node = nodes.poll();
-            int number = node.number;
-            int distance = node.distance;
-            if (answer[number] != -1) {
+        for (int i = 0; i < e; i++) {
+            adj.get(sc.nextInt()).add(new Pair(sc.nextInt(), sc.nextInt()));
+        }
+        int[] d = new int[v + 1];
+        Arrays.fill(d, INF);
+        PriorityQueue<Pair> pq = new PriorityQueue<>(Comparator.comparingInt(o -> o.w));
+        d[k] = 0;
+        pq.offer(new Pair(k, 0));
+        while (!pq.isEmpty()) {
+            Pair c = pq.poll();
+            if (c.w != d[c.u]) {
                 continue;
             }
-            answer[number] = distance;
-            if (!edges.containsKey(number)) {
-                continue;
-            }
-            for (Edge edge : edges.get(number)) {
-                int to = edge.to;
-                int weight = edge.weight;
-                if (answer[to] != -1) {
+            for (Pair n : adj.get(c.u)) {
+                if (d[n.u] <= d[c.u] + n.w) {
                     continue;
                 }
-                nodes.offer(new Node(to, weight + distance));
+                d[n.u] = d[c.u] + n.w;
+                pq.offer(new Pair(n.u, d[n.u]));
             }
         }
-
+        StringBuilder sb = new StringBuilder();
         for (int i = 1; i <= v; i++) {
-            int result = answer[i];
-            if (result == -1) {
-                System.out.println("INF");
+            if (d[i] == INF) {
+                sb.append("INF\n");
             } else {
-                System.out.println(result);
+                sb.append(d[i]).append("\n");
             }
         }
+        System.out.print(sb);
     }
 
-    private static class Node {
-        int number;
-        int distance;
+    private static class Pair {
+        int u;
+        int w;
 
-        public Node(int number, int distance) {
-            this.number = number;
-            this.distance = distance;
-        }
-    }
-
-    private static class Edge {
-        int to;
-        int weight;
-
-        public Edge(int to, int weight) {
-            this.to = to;
-            this.weight = weight;
+        public Pair(int u, int w) {
+            this.u = u;
+            this.w = w;
         }
     }
 
